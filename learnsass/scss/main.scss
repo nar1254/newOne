@@ -1,0 +1,185 @@
+//es hnaravorutyun tvec tvyal faylin miacnel _resets.scss fayly
+@import './resets';
+@import './variables';
+
+//function stexcecinq, vorpeszi karoxananq nuyn bany chkrknenq
+//inch anun uzenq krnanq tanq, argumentov function e, vorovhetev ed arjeqy anyndhat krna popoxvi (bold, medium, light)
+//hedo return erecinq map-get-y vory berec miacrec array stex (key=>value)
+//arajin parametry ed popoxakani anunn e, erkrordy arden function-i miji argumenti anuny
+@function Weight_scale($weight-name){
+  @return map-get($font-weight, $weight-name);
+  //return stex vorpes result e arjeqi tesqov, or bdi artace erb or iran css-um inch-vor mi tex kanchenq
+}
+
+
+//if we have one code repeated with exact way in many other places we use mixin, which is like function
+//we will be abke to include this mixin wherever we want
+// @mixin flexCenter {
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
+
+//mixins can have arguments
+@mixin flexCenter ($direction){
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: $direction;
+}
+
+//myus mixin-i mej knerarenq tema, vory klini bac guyni, u mixin-i mej klini payman, vory hnaravorutyun kta stugelu background-i guyny
+@mixin theme($light-theme: true) {
+  @if $light-theme{
+    background-color: lighten($primary-color, 100%);
+    //lighten-y ynor hamar e or voroshenq inchqanov guzenq bacacnenq guyny
+    color: darken($text-color, 100%);
+    //tundacnelu hamar darken
+  }
+  //ete uzenanq hakarak depqn el usumnasirel, uremn else if ogtagorcenq
+  //es paragayum bdi tanq false u nerqevum ete kancheluc argumenty exni false, kashxadi 'else'-i tarberaky
+  @else if ($light-theme: false){
+    background-color: $accent-color;
+    color: lighten($primary-color, 30%);
+  }
+}
+
+
+//another mixin with @content, harmarvox tarberaki hamar
+//erb gres include bdi enes .main-i mej or ashxadi
+@mixin mobile{
+  @media (max-width: $mobile-width){
+    @content;
+  }
+}
+
+
+//the way of using css variables
+// :root{
+//   --primary-color: #272727;
+//   --accent-color: #ff652f;
+//   --text-color: #fff;
+// }
+
+//the way we use css variables as values
+// body{
+//   background: var(--primary-color);
+// }
+
+//the way of using sass variables 
+// $primary-color: #272727;
+// $accent-color: #ff652f;
+// $text-color: #fff;
+// $font-weight: (
+//   "bold": 800,
+//   "medium": 500,
+//   "light": 300
+// );
+
+//the way of using sass variables as values
+//u es tarberakov main.css kgna menak arjeq, $ nshanner chen lini
+body{
+  background-color: $accent-color;
+  color: $text-color;
+  font-weight: map-get($font-weight, 'light');
+}
+
+//erb uzum enq poxel divi mej gtnvox p-i css-y, menq grum enq senc
+// .main{
+//   width: 80%;
+//   margin: 0 auto;
+// }
+
+// .main p{
+//   font-size: 25px;
+// }
+
+//bayc karox enq grel sass-um ay senc
+//this is called nesting
+// .main{
+//   width: 80%;
+//   margin: 0 auto;
+
+//   p{
+//     font-size: 25px;
+//   }
+// }
+
+//ete unenq mi hat class, vory ed mec div-i anunic uni, uremn krnanq grenq spes
+// .main{
+//   width: 80%;
+//   margin: 0 auto;
+
+//   .main__paragraph{
+//     font-size: 25px;
+//   }
+// }
+
+//kam spes
+//stex & = parent div(or tag)
+//aysinkn & iranc knerkayacne parent-i anuny
+//es kashxadi menak en depqum, ete ed arajin bary parent div-i anunic e
+//bayc sa main.css-um cuyc e talu vorpes arandzin class, isk mez petq e vor nerdrvac linen
+// .main{
+//   width: 80%;
+//   margin: 0 auto;
+
+//   &__paragraph{
+//     font-size: 25px;
+//   }
+// }
+
+//vorpeszi nerdrvac tesq unena, aysinkn exni main-i miji main-paragraph, bdi grenq spes
+// .main{
+//   width: 80%;
+//   margin: 0 auto;
+
+//   #{&}__paragraph{
+//     font-size: 25px;
+//   }
+// }
+
+//isk ete mez anhrajesht e or erb pahenq vren u hover arajan, ed depqum bdi grenq ira nersum, kstacvi main-i miji main-paragraphi hover
+//es paragayum arden mi hat '&' kdnenq, vorpeszi es verabervi main-paragraphi hoverin
+.main{
+  //we include mixin that has display flex and centered features above and we include with its name
+  // @include flexCenter;
+  //mixin-y krna unena naev argument verevum haytararac
+  //u arden hstak arjeqy kudanq 
+  //chakertner dnel petq che
+  @include flexCenter(row);
+  width: 80%;
+  margin: 0 auto;
+  font-weight: Weight_scale('bold');
+  //font-weight css hatkutyan hamar kanchel enq Weight anunov function, vory verevum stexcvac e, u nersum uxxaki tvel enq arjeq, vory naxoroq arden pahel einq popoxakani mej
+
+  #{&}__paragraph1{
+    font-size: 25px;
+
+    &:hover{
+      color: black;
+    }
+  }
+  //ete uninq erku arandzin diver kam prosto elementner u guzenq or erkrordy yndune nuyn arjeqnery inchor arajinn unir, ed depqum krnanq arajinin extend enenq erkrordi mej 
+  //zut nuyn bany chkrknelu hamar e 
+  #{&}__paragraph2{
+    @extend .main__paragraph1;
+
+    &:hover{
+      color: white;
+    }
+  }
+  //including mobile mixin here to see changes erb kayqy bacvigy heraxosov 700px display-ov
+  @include mobile{
+    flex-direction: column;
+    color: $text-color;
+  }
+}
+
+//stex es classy tvac e body-in, ete include eneluc ed mixin-y argumenty kndune true, kashcadi if-y
+//ete argument tanq false - uremn kashxadi else if-y
+.light{
+  // @include theme($light-theme: false);
+  @include theme(false);
+  //krnanq ham mixin-i argumenti anuny grenq ira true kam false-ov, kam el aranc ed argumenti anuni prosto true kam false
+}
